@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://floreria-eventos.vercel.app/sitemap-index.xml

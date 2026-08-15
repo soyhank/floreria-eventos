@@ -1,0 +1,49 @@
+---
+import { wa } from '../data/site';
+import Icons from './Icons.astro';
+const gallery = [
+  { src: '/img/boda.webp', w: 640, h: 800, alt: 'Pasillo de boda decorado con arreglos florales blancos y rosados', label: 'Bodas · desde S/ 2000' },
+  { src: '/img/centro-mesa.webp', w: 480, h: 600, alt: 'Centro de mesa alto con rosas rosadas y blancas en base dorada', label: 'Quinceañeros · centros S/ 100 c/u' },
+  { src: '/img/inauguracion.webp', w: 480, h: 600, alt: 'Arreglo floral de pie con girasoles y lirios para inauguración', label: 'Inauguraciones · desde S/ 100' },
+];
+const steps = [
+  { n: '01', t: 'Cuéntanos tu evento', d: 'Tipo de evento, fecha, lugar, número de mesas y la paleta de colores que imaginas.' },
+  { n: '02', t: 'Propuesta y cotización', d: 'Te enviamos referencias, flores sugeridas y el presupuesto por WhatsApp.' },
+  { n: '03', t: 'Montaje el día del evento', d: 'Llevamos e instalamos los arreglos frescos en el local, listos antes de que lleguen los invitados.' },
+];
+---
+<section id="eventos" class="scroll-mt-24 py-16 sm:py-24">
+  <div class="container-x">
+    <div class="mx-auto max-w-2xl text-center reveal">
+      <p class="eyebrow justify-center before:hidden">Decoración de eventos</p>
+      <h2 class="mt-4 text-4xl font-medium leading-tight tracking-tight sm:text-5xl">
+        Ambientamos <em class="font-light italic text-terra">tu gran día</em>
+      </h2>
+      <p class="mt-4 text-lg text-cocoa">Bodas, quinceañeros e inauguraciones con flores frescas y un diseño pensado para el espacio y el estilo de tu celebración.</p>
+    </div>
+
+    <div class="mt-12 grid gap-4 sm:gap-6 md:grid-cols-3">
+      {gallery.map((g, i) => (
+        <figure class={`group reveal relative overflow-hidden rounded-3xl shadow-soft ${i === 1 ? 'md:mt-10' : ''}`} style={`transition-delay:${i * 80}ms`}>
+          <img src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" class="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105" />
+          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-choco/80 to-transparent p-4 pt-12 font-display text-lg italic text-cream">{g.label}</figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <div class="mt-14 grid gap-6 rounded-[2rem] border border-choco/10 bg-white/60 p-6 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center reveal">
+      <ol class="grid gap-6 sm:grid-cols-3">
+        {steps.map((s) => (
+          <li>
+            <span class="font-display text-3xl font-light text-terra">{s.n}</span>
+            <p class="mt-2 font-semibold">{s.t}</p>
+            <p class="mt-1 text-sm leading-relaxed text-mocha">{s.d}</p>
+          </li>
+        ))}
+      </ol>
+      <a href={wa('Hola 👋, quisiera cotizar la decoración floral de un evento. Tipo de evento: ___ · Fecha: ___ · Lugar: ___ · N.º de mesas: ___')} target="_blank" rel="noopener" class="btn-primary justify-self-start lg:justify-self-end">
+        Cotizar mi evento <Icons name="arrow" class="h-4 w-4" />
+      </a>
+    </div>
+  </div>
+</section>
