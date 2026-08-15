@@ -68,11 +68,13 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     onScroll();
     if (!(window as any).__headerScroll) { (window as any).__headerScroll = true; addEventListener('scroll', () => document.getElementById('header')?.setAttribute('data-scrolled', String(window.scrollY > 40)), { passive: true }); }
 
+    if (header.dataset.bound) return; header.dataset.bound = '1';
     const btn = document.getElementById('menu-btn')!; const menu = document.getElementById('mobile-menu')!; const close = document.getElementById('menu-close')!;
     const set = (open: boolean) => { menu.classList.toggle('open', open); menu.setAttribute('aria-hidden', String(!open)); btn.setAttribute('aria-expanded', String(open)); document.body.style.overflow = open ? 'hidden' : ''; };
     btn.addEventListener('click', () => set(true)); close.addEventListener('click', () => set(false));
     menu.querySelector('.menu-backdrop')!.addEventListener('click', () => set(false));
     menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false)));
   }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initHeader); else initHeader();
   document.addEventListener('astro:page-load', initHeader);
 </script>

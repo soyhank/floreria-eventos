@@ -33,7 +33,8 @@ import { products, categories } from '../../data/products';
 
 <script>
   function initCatalog() {
-    const tabs = document.querySelectorAll<HTMLButtonElement>('#cat-tabs [role=tab]'); if (!tabs.length) return;
+    const wrap = document.getElementById('cat-tabs'); if (!wrap || wrap.dataset.bound) return; wrap.dataset.bound = '1';
+    const tabs = wrap.querySelectorAll<HTMLButtonElement>('[role=tab]');
     const cards = document.querySelectorAll<HTMLElement>('#cat-grid [data-cat]');
     const count = document.getElementById('cat-count')!;
     const apply = (cat: string) => {
@@ -48,5 +49,6 @@ import { products, categories } from '../../data/products';
     };
     tabs.forEach((t) => t.addEventListener('click', () => apply(t.dataset.cat!)));
   }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCatalog); else initCatalog();
   document.addEventListener('astro:page-load', initCatalog);
 </script>
