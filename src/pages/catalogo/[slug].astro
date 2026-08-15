@@ -1,0 +1,77 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Icons from '../../components/Icons.astro';
+import { products, fmt, categories } from '../../data/products';
+import { wa } from '../../data/site';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const catLabel = categories.find((c) => c.id === p.cat)?.label;
+const related = products.filter((x) => x.slug !== p.slug && x.cat === p.cat).concat(products.filter((x) => x.slug !== p.slug && x.cat !== p.cat)).slice(0, 3);
+const msg = `Hola 👋, me interesa: ${p.name} (${p.priceNote === 'desde' ? 'desde ' : ''}${fmt(p.price)}). Fecha de entrega: ___ · Colores: ___`;
+---
+<Layout title={`${p.name} — Flores & Eventos`} description={p.desc} image={p.img}>
+  <article class="pt-28 sm:pt-32">
+    <div class="container-x">
+      <nav aria-label="Migas de pan" class="text-xs uppercase tracking-[0.18em] text-muted" data-reveal="fade">
+        <a href="/" class="hover:text-forest">Inicio</a> <span class="mx-2">/</span>
+        <a href="/catalogo" class="hover:text-forest">Catálogo</a> <span class="mx-2">/</span>
+        <span class="text-forest">{p.name}</span>
+      </nav>
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div class="relative" data-reveal="left">
+          <div class="overflow-hidden rounded-[2rem] shadow-lift">
+            <img src={p.img} alt={p.name} width="800" height="1000" class="aspect-[4/5] w-full object-cover" transition:name={`img-${p.slug}`} fetchpriority="high" />
+          </div>
+          <span class="absolute left-5 top-5 rounded-full bg-ivory/95 px-4 py-2 text-sm font-bold text-forest shadow-soft">
+            {p.priceNote === 'desde' && <span class="font-medium text-muted">desde </span>}{fmt(p.price)}{p.priceNote && p.priceNote !== 'desde' && <span class="font-medium text-muted"> {p.priceNote}</span>}
+          </span>
+        </div>
+
+        <div class="lg:py-6" data-reveal="right">
+          <p class="eyebrow">{catLabel}</p>
+          <h1 class="h-display mt-4 text-5xl sm:text-6xl">{p.name}</h1>
+          <p class="mt-3 font-display text-3xl text-fuchsia">
+            {p.priceNote === 'desde' && <span class="text-lg text-muted">desde </span>}{fmt(p.price)}{p.priceNote && p.priceNote !== 'desde' && <span class="text-lg text-muted"> {p.priceNote}</span>}
+          </p>
+          <p class="mt-6 text-lg leading-relaxed text-cocoa text-ink/80">{p.desc}</p>
+
+          <div class="mt-8 grid gap-6 sm:grid-cols-2">
+            <div>
+              <h2 class="text-[11px] font-semibold uppercase tracking-[0.25em] text-muted">Incluye / se personaliza</h2>
+              <ul class="mt-3 space-y-2" data-stagger="70">
+                {p.includes.map((t) => <li data-reveal="up" class="flex items-start gap-2 text-sm"><Icons name="check" class="mt-0.5 h-4 w-4 shrink-0 text-leaf" /> {t}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h2 class="text-[11px] font-semibold uppercase tracking-[0.25em] text-muted">Ideal para</h2>
+              <ul class="mt-3 flex flex-wrap gap-2" data-stagger="70">
+                {p.ideal.map((t) => <li data-reveal="zoom" class="rounded-full bg-blush/40 px-3 py-1.5 text-sm text-forest">{t}</li>)}
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-10 flex flex-wrap gap-3">
+            <a href={wa(msg)} target="_blank" rel="noopener" class="btn btn-wa !px-7 !py-4 !text-base"><Icons name="wa" class="h-5 w-5" /> Pedir por WhatsApp</a>
+            <a href="/catalogo" class="btn btn-outline">Volver al catálogo</a>
+          </div>
+          <p class="mt-4 text-xs text-muted">Precio referencial. La cotización final depende de flores, tamaño y fecha; se confirma por WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="container-x mt-20 border-t border-forest/10 pt-16 sm:mt-28">
+      <div class="flex items-end justify-between" data-reveal="up">
+        <h2 class="h-display text-3xl sm:text-5xl">También te puede <em class="font-light italic text-fuchsia">gustar</em></h2>
+        <a href="/catalogo" class="link-underline hidden text-sm font-semibold uppercase tracking-[0.18em] text-forest sm:inline">Ver todo</a>
+      </div>
+      <div class="mt-10 grid gap-6 pb-20 sm:grid-cols-2 lg:grid-cols-3">
+        {related.map((r, i) => <ProductCard p={r} index={i} />)}
+      </div>
+    </section>
+  </article>
+</Layout>

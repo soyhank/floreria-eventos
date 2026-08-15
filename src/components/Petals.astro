@@ -1,0 +1,12 @@
+---
+// Pétalos que caen (decorativo). Cantidad y variación pseudoaleatoria determinista.
+const petals = Array.from({ length: 14 }, (_, i) => ({
+  x: (i * 37 + 11) % 100,
+  t: 12 + ((i * 7) % 9),
+  dl: -((i * 3.7) % 14),
+  s: 0.7 + ((i * 13) % 6) / 10,
+}));
+---
+<div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+  {petals.map((p) => <span class="petal" style={`--x:${p.x}%;--t:${p.t}s;--dl:${p.dl}s;--s:${p.s}`}></span>)}
+</div>

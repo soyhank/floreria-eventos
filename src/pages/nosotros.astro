@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icons from '../components/Icons.astro';
+
+const values = [
+  { icon: 'leaf', t: 'Flores frescas', d: 'Trabajamos con flores de temporada seleccionadas para que cada arreglo luzca y dure más.' },
+  { icon: 'sparkle', t: 'Diseño a tu medida', d: 'Colores, tamaño, tipo de flor y presupuesto: cada pieza se adapta a la ocasión y a la persona.' },
+  { icon: 'ring', t: 'Eventos completos', d: 'Desde un centro de mesa hasta la ambientación integral de una boda o quinceañero, incluido el montaje.' },
+  { icon: 'heart', t: 'Atención cercana', d: 'Te asesoramos por WhatsApp de principio a fin y coordinamos la entrega para la fecha que necesitas.' },
+] as const;
+const gallery = [
+  { src: '/img/ramo.webp', alt: 'Ramo de rosas rojas', cls: 'row-span-2' },
+  { src: '/img/box.webp', alt: 'Arreglo box con rosas azules y bombones', cls: '' },
+  { src: '/img/centro-mesa-wide.webp', alt: 'Centro de mesa con rosas rosadas', cls: '' },
+  { src: '/img/cumpleanos.webp', alt: 'Canasta de cumpleaños con globos', cls: 'row-span-2' },
+  { src: '/img/inauguracion.webp', alt: 'Arreglo de inauguración', cls: '' },
+  { src: '/img/boda.webp', alt: 'Decoración floral de boda', cls: '' },
+];
+---
+<Layout dark title="Nosotros — Flores & Eventos" description="Somos un emprendimiento de venta de flores, arreglos florales y decoración de eventos especiales: inauguraciones, bodas y quinceañeros.">
+  <PageHero eyebrow="Nosotros" title="Flores hechas" accent="con cariño." text="Somos un emprendimiento dedicado a la venta de flores, arreglos y decoración de eventos especiales. Cada pedido lo trabajamos contigo, de la idea a la entrega." image="/img/cumpleanos.webp" alt="" compact />
+
+  <div class="bg-ivory text-ink">
+    <section class="py-20 sm:py-28">
+      <div class="container-x grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
+        <div data-reveal="left">
+          <p class="eyebrow">Nuestra historia</p>
+          <h2 class="h-display mt-4 text-4xl sm:text-6xl">Un detalle floral <em class="font-light italic text-fuchsia">para cada momento</em></h2>
+          <div class="mt-6 space-y-4 text-lg leading-relaxed text-ink/75">
+            <p>Empezamos armando ramos y arreglos para regalar; hoy también ambientamos inauguraciones, bodas y quinceañeros. Lo que no cambió es la forma de trabajar: escuchar la ocasión, proponer flores y colores, y entregar algo que emocione.</p>
+            <p>Cada arreglo es distinto porque cada persona y cada celebración lo son. Por eso todo se cotiza y personaliza por WhatsApp: cantidad de flores, paleta, tamaño y fecha.</p>
+          </div>
+          <div class="mt-8 grid grid-cols-3 gap-6 border-t border-forest/10 pt-6" data-stagger="120">
+            <div data-reveal="up"><p class="font-display text-4xl font-semibold"><span data-count="6">0</span>+</p><p class="text-[11px] uppercase tracking-[0.2em] text-muted">Líneas de producto</p></div>
+            <div data-reveal="up"><p class="font-display text-4xl font-semibold"><span data-count="3">0</span></p><p class="text-[11px] uppercase tracking-[0.2em] text-muted">Tipos de evento</p></div>
+            <div data-reveal="up"><p class="font-display text-4xl font-semibold"><span data-count="100" data-prefix="S/ ">S/ 0</span></p><p class="text-[11px] uppercase tracking-[0.2em] text-muted">Arreglos desde</p></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3" data-reveal="right">
+          {gallery.slice(0, 4).map((g, i) => (
+            <div class={`overflow-hidden rounded-2xl shadow-soft ${g.cls} ${i === 1 ? 'mt-8' : ''}`}>
+              <img src={g.src} alt={g.alt} width="480" height="600" loading="lazy" class="h-full w-full object-cover transition duration-[1.4s] hover:scale-110 [transition-timing-function:var(--ease-out-expo)]" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="relative overflow-hidden bg-forest py-20 text-ivory sm:py-28 grain">
+      <div aria-hidden="true" class="pointer-events-none absolute -left-24 bottom-0 h-96 w-96 rounded-full bg-fuchsia/20 blur-3xl animate-blob"></div>
+      <div class="container-x relative">
+        <div class="max-w-2xl" data-reveal="up">
+          <p class="eyebrow eyebrow-light">Por qué elegirnos</p>
+          <h2 class="h-display mt-4 text-4xl sm:text-6xl">Más que flores, <em class="font-light italic text-blush">una experiencia</em></h2>
+        </div>
+        <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-stagger="110">
+          {values.map((v, i) => (
+            <li data-reveal="up" class="group rounded-3xl border border-ivory/10 bg-ivory/5 p-6 backdrop-blur-sm transition duration-500 hover:-translate-y-1 hover:bg-ivory/10">
+              <span class="grid h-12 w-12 place-items-center rounded-2xl bg-blush/20 text-blush transition group-hover:bg-blush group-hover:text-forest"><Icons name={v.icon} class="h-5 w-5" /></span>
+              <span class="mt-5 block font-display text-5xl font-light text-blush/40">0{i + 1}</span>
+              <h3 class="mt-2 font-display text-2xl font-semibold">{v.t}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ivory/65">{v.d}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="py-20 sm:py-28">
+      <div class="container-x">
+        <div class="flex items-end justify-between" data-reveal="up">
+          <div>
+            <p class="eyebrow">Galería</p>
+            <h2 class="h-display mt-4 text-4xl sm:text-6xl">Nuestro <em class="font-light italic text-fuchsia">trabajo</em></h2>
+          </div>
+          <a href="/catalogo" class="link-underline hidden text-sm font-semibold uppercase tracking-[0.18em] text-forest sm:inline">Ver catálogo</a>
+        </div>
+        <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:auto-rows-[220px]" data-stagger="90">
+          {gallery.map((g) => (
+            <figure data-reveal="zoom" class={`group relative overflow-hidden rounded-2xl ${g.cls}`}>
+              <img src={g.src} alt={g.alt} width="480" height="600" loading="lazy" class="h-full w-full object-cover transition duration-[1.4s] group-hover:scale-110 [transition-timing-function:var(--ease-out-expo)]" />
+              <figcaption class="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-forest/80 to-transparent p-4 text-sm text-ivory transition duration-500 group-hover:translate-y-0">{g.alt}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <CtaBand />
+  </div>
+</Layout>

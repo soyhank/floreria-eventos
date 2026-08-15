@@ -3,36 +3,43 @@ import { site, nav, wa } from '../data/site';
 import Icons from './Icons.astro';
 const year = new Date().getFullYear();
 ---
-<footer class="relative overflow-hidden bg-choco text-cream/80">
-  <div class="container-x py-14">
-    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+<footer class="relative overflow-hidden bg-forest text-ivory/80">
+  <div aria-hidden="true" class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-fuchsia/20 blur-3xl animate-blob"></div>
+  <div aria-hidden="true" class="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-leaf/15 blur-3xl animate-blob [animation-delay:-6s]"></div>
+
+  <div class="container-x relative py-16">
+    <div class="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
       <div>
         <div class="flex items-center gap-3">
           <img src="/img/logo.webp" alt="" width="52" height="52" class="h-13 w-13 rounded-full" />
           <div>
-            <p class="font-display text-xl font-semibold text-cream">Flores <span class="text-gold">&amp; Eventos</span></p>
-            <p class="text-xs uppercase tracking-[0.2em] text-cream/60">{site.tagline}</p>
+            <p class="font-display text-2xl font-semibold text-ivory">Flores <em class="font-light italic text-blush">&amp;</em> Eventos</p>
+            <p class="text-[10px] uppercase tracking-[0.3em] text-ivory/50">{site.tagline}</p>
           </div>
         </div>
-        <p class="mt-5 max-w-sm text-sm leading-relaxed text-cream/70">{site.description}</p>
+        <p class="mt-6 max-w-sm text-sm leading-relaxed text-ivory/65">{site.description}</p>
+        <a href={wa()} target="_blank" rel="noopener" class="btn btn-wa mt-6"><Icons name="wa" class="h-4 w-4" /> +51 {site.phone}</a>
       </div>
       <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Explora</p>
-        <ul class="mt-4 space-y-2 text-sm">
-          {nav.map((n) => <li><a href={n.href} class="transition hover:text-cream">{n.label}</a></li>)}
+        <p class="text-[11px] font-semibold uppercase tracking-[0.3em] text-blush">Explora</p>
+        <ul class="mt-5 space-y-2.5 text-sm">
+          {nav.map((n) => <li><a href={n.href} class="link-underline text-ivory/75 transition hover:text-ivory">{n.label}</a></li>)}
+          <li><a href="/catalogo" class="link-underline text-ivory/75 transition hover:text-ivory">Precios</a></li>
         </ul>
       </div>
       <div>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Pedidos</p>
-        <ul class="mt-4 space-y-3 text-sm">
-          <li><a href={wa()} target="_blank" rel="noopener" class="inline-flex items-center gap-2 transition hover:text-cream"><Icons name="wa" class="h-4 w-4 text-wa" /> +51 {site.phone}</a></li>
-          <li class="text-cream/60">Perú · Entregas y montajes coordinados por WhatsApp</li>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.3em] text-blush">Servicios</p>
+        <ul class="mt-5 space-y-2.5 text-sm text-ivory/75">
+          <li><a href="/eventos#bodas" class="link-underline hover:text-ivory">Decoración de bodas</a></li>
+          <li><a href="/eventos#quince" class="link-underline hover:text-ivory">Quinceañeros</a></li>
+          <li><a href="/eventos#inauguraciones" class="link-underline hover:text-ivory">Inauguraciones</a></li>
+          <li><a href="/catalogo" class="link-underline hover:text-ivory">Ramos y arreglos box</a></li>
         </ul>
       </div>
     </div>
-    <div class="mt-12 flex flex-col items-start justify-between gap-3 border-t border-cream/10 pt-6 text-xs text-cream/50 sm:flex-row sm:items-center">
+    <div class="mt-14 flex flex-col items-start justify-between gap-3 border-t border-ivory/10 pt-6 text-xs text-ivory/45 sm:flex-row sm:items-center">
       <p>© {year} {site.name}. Todos los derechos reservados.</p>
-      <p class="font-display italic text-cream/60">{site.claim}</p>
+      <p class="font-display text-base italic text-ivory/60">{site.claim}</p>
     </div>
   </div>
 </footer>

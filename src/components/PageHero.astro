@@ -1,0 +1,20 @@
+---
+import Petals from './Petals.astro';
+interface Props { eyebrow: string; title: string; accent?: string; text?: string; image?: string; alt?: string; compact?: boolean }
+const { eyebrow, title, accent, text, image, alt = '', compact = false } = Astro.props;
+---
+<section class:list={['relative overflow-hidden bg-forest text-ivory grain', compact ? 'pt-32 pb-16 sm:pt-36 sm:pb-20' : 'pt-32 pb-20 sm:pt-40 sm:pb-28']}>
+  {image && <img src={image} alt={alt} class="kenburns absolute inset-0 h-full w-full object-cover opacity-30" width="1200" height="800" fetchpriority="high" />}
+  <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-b from-forest/40 via-forest/70 to-forest"></div>
+  <div aria-hidden="true" class="pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-fuchsia/25 blur-3xl animate-blob"></div>
+  <Petals />
+  <div class="container-x relative">
+    <p class="eyebrow eyebrow-light" data-reveal="fade">{eyebrow}</p>
+    <h1 class="h-display mt-5 max-w-4xl text-5xl sm:text-6xl lg:text-7xl words">
+      {title.split(' ').map((w) => <span><span>{w}&nbsp;</span></span>)}
+      {accent && <span><span class="font-light italic text-blush">{accent}</span></span>}
+    </h1>
+    {text && <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ivory/75" data-reveal="up" style="--d:500ms">{text}</p>}
+    <slot />
+  </div>
+</section>

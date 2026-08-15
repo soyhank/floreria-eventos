@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Marquee from '../../components/Marquee.astro';
+import { products, categories } from '../../data/products';
+---
+<Layout dark title="Catálogo y precios — Flores & Eventos" description="Ramos, arreglos box, arreglos de cumpleaños, arreglos de inauguración, centros de mesa y decoración de bodas. Precios referenciales en soles y pedidos por WhatsApp.">
+  <PageHero eyebrow="Catálogo" title="Arreglos y" accent="precios" text="Precios referenciales en soles. Cada arreglo se personaliza en flores, colores y tamaño; la cotización final se confirma por WhatsApp." image="/img/ramo.webp" alt="" compact />
+
+  <section class="bg-ivory py-14 text-ink sm:py-20">
+    <div class="container-x">
+      <div class="flex flex-wrap items-center gap-2" role="tablist" aria-label="Filtrar por categoría" id="cat-tabs" data-reveal="fade">
+        {categories.map((c, i) => (
+          <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-cat={c.id}
+            class="rounded-full border border-forest/15 bg-white px-5 py-2.5 text-sm font-medium text-forest/80 transition-all duration-300 hover:border-forest/40 aria-selected:border-forest aria-selected:bg-forest aria-selected:text-ivory">
+            {c.label}
+          </button>
+        ))}
+        <span class="ml-auto text-sm text-muted" id="cat-count">{products.length} productos</span>
+      </div>
+
+      <div id="cat-grid" class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products.map((p, i) => <ProductCard p={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-ivory text-ink"><Marquee /></div>
+  <div class="bg-ivory text-ink"><CtaBand title="¿No encuentras lo que buscas?" text="Diseñamos arreglos a medida: cuéntanos la ocasión, los colores y tu presupuesto." msg="Hola 👋, quisiera un arreglo personalizado. Ocasión: ___ · Colores: ___ · Presupuesto: ___" label="Pedir a medida" /></div>
+</Layout>
+
+<script>
+  function initCatalog() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('#cat-tabs [role=tab]'); if (!tabs.length) return;
+    const cards = document.querySelectorAll<HTMLElement>('#cat-grid [data-cat]');
+    const count = document.getElementById('cat-count')!;
+    const apply = (cat: string) => {
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.cat === cat)));
+      let n = 0;
+      cards.forEach((c, i) => {
+        const show = cat === 'todos' || c.dataset.cat === cat;
+        c.classList.toggle('hidden', !show);
+        if (show) { n++; c.classList.remove('in'); c.style.setProperty('--d', `${(n % 3) * 80}ms`); requestAnimationFrame(() => c.classList.add('in')); }
+      });
+      count.textContent = `${n} producto${n === 1 ? '' : 's'}`;
+    };
+    tabs.forEach((t) => t.addEventListener('click', () => apply(t.dataset.cat!)));
+  }
+  document.addEventListener('astro:page-load', initCatalog);
+</script>

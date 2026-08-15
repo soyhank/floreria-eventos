@@ -1,23 +1,29 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import { site } from '../data/site';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 
-interface Props { title?: string; description?: string }
-const { title = `${site.name} — Florería y decoración de eventos`, description = site.description } = Astro.props;
+interface Props { title?: string; description?: string; dark?: boolean; image?: string }
+const {
+  title = `${site.name} — Florería y decoración de eventos`,
+  description = site.description,
+  dark = false,
+  image = '/img/og.jpg',
+} = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
-const og = new URL('/img/og.jpg', Astro.site ?? site.url).href;
+const og = new URL(image, Astro.site ?? site.url).href;
 
 const ld = {
   '@context': 'https://schema.org',
   '@type': 'Florist',
   name: site.name,
-  description,
+  description: site.description,
   url: site.url,
   telephone: `+${site.phoneIntl}`,
-  image: og,
+  image: new URL('/img/og.jpg', site.url).href,
   logo: new URL('/img/logo.webp', site.url).href,
   priceRange: 'S/ 100 - S/ 2000',
   slogan: site.tagline,
@@ -34,7 +40,7 @@ const ld = {
     <link rel="icon" href="/favicon-64.png" sizes="64x64" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#f7f1e8" />
+    <meta name="theme-color" content={dark ? '#0f2e24' : '#f7f3ee'} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -46,21 +52,88 @@ const ld = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={og} />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <ClientRouter />
   </head>
-  <body>
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-choco focus:px-4 focus:py-2 focus:text-cream">Saltar al contenido</a>
-    <Header />
+  <body class:list={[dark && 'bg-forest text-ivory']}>
+    <div id="scroll-progress" class="fixed inset-x-0 top-0 z-[60] h-[3px] bg-gradient-to-r from-fuchsia via-blush-2 to-leaf"></div>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-forest focus:px-4 focus:py-2 focus:text-ivory">Saltar al contenido</a>
+    <Header dark={dark} />
     <main id="main"><slot /></main>
     <Footer />
     <WhatsAppFloat />
+
     <script>
-      const els = document.querySelectorAll('.reveal');
-      if ('IntersectionObserver' in window) {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function initReveal() {
+        const els = document.querySelectorAll<HTMLElement>('[data-reveal]:not(.in)');
+        if (!('IntersectionObserver' in window) || reduce) { els.forEach((e) => e.classList.add('in')); return; }
         const io = new IntersectionObserver((entries) => {
           for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
         els.forEach((el) => io.observe(el));
-      } else els.forEach((el) => el.classList.add('in'));
+      }
+
+      function initStagger() {
+        document.querySelectorAll<HTMLElement>('[data-stagger]').forEach((group) => {
+          const step = Number(group.dataset.stagger) || 80;
+          group.querySelectorAll<HTMLElement>(':scope > [data-reveal]').forEach((el, i) => el.style.setProperty('--d', `${i * step}ms`));
+        });
+      }
+
+      function initCounters() {
+        const els = document.querySelectorAll<HTMLElement>('[data-count]');
+        if (!els.length) return;
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            const el = e.target as HTMLElement; io.unobserve(el);
+            const target = Number(el.dataset.count); const prefix = el.dataset.prefix ?? ''; const suffix = el.dataset.suffix ?? '';
+            if (reduce) { el.textContent = prefix + target.toLocaleString('es-PE') + suffix; continue; }
+            const t0 = performance.now(); const dur = 1400;
+            const tick = (t: number) => {
+              const p = Math.min(1, (t - t0) / dur); const v = Math.round(target * (1 - Math.pow(1 - p, 4)));
+              el.textContent = prefix + v.toLocaleString('es-PE') + suffix;
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          }
+        }, { threshold: 0.6 });
+        els.forEach((el) => io.observe(el));
+      }
+
+      function initTilt() {
+        if (reduce || matchMedia('(hover: none)').matches) return;
+        document.querySelectorAll<HTMLElement>('.tilt').forEach((card) => {
+          card.addEventListener('mousemove', (ev) => {
+            const r = card.getBoundingClientRect();
+            const x = (ev.clientX - r.left) / r.width - 0.5; const y = (ev.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(900px) rotateX(${(-y * 8).toFixed(2)}deg) rotateY(${(x * 10).toFixed(2)}deg) translateY(-4px)`;
+          });
+          card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+        });
+      }
+
+      function initProgress() {
+        const update = () => {
+          const bar = document.getElementById('scroll-progress'); if (!bar) return;
+          const h = document.documentElement; const max = h.scrollHeight - h.clientHeight;
+          bar.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
+        };
+        update();
+        if (!(window as any).__progressBound) { (window as any).__progressBound = true; addEventListener('scroll', update, { passive: true }); }
+      }
+
+      function initWords() {
+        document.querySelectorAll<HTMLElement>('.words:not([data-ready])').forEach((el) => {
+          el.dataset.ready = '1';
+          let i = 0;
+          el.querySelectorAll<HTMLElement>(':scope > span > span').forEach((w) => w.style.setProperty('--i', String(i++)));
+        });
+      }
+
+      function initAll() { initStagger(); initReveal(); initCounters(); initTilt(); initProgress(); initWords(); }
+      document.addEventListener('astro:page-load', initAll);
     </script>
   </body>
 </html>

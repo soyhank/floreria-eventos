@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Marquee from '../components/Marquee.astro';
+import Icons from '../components/Icons.astro';
+import { wa } from '../data/site';
+
+const events = [
+  {
+    id: 'bodas', eyebrow: 'Bodas', title: 'Tu ceremonia,', accent: 'en flor.', img: '/img/boda.webp', price: 'desde S/ 2000',
+    text: 'Ambientación floral completa para el gran día: pasillo, altar o arco, sillas, mesas y detalles para la sesión de fotos. Diseñamos según el estilo del lugar y la paleta de la boda.',
+    items: ['Pasillo y altar o arco floral', 'Centros de mesa y decoración de sillas', 'Bouquet de la novia y boutonniere (a consultar)', 'Montaje y retiro coordinados con el local'],
+    msg: 'Hola 👋, quisiera cotizar la decoración floral de mi boda. Fecha: ___ · Lugar: ___ · N.º de invitados: ___',
+  },
+  {
+    id: 'quince', eyebrow: 'Quinceañeros', title: 'Una fiesta', accent: 'inolvidable.', img: '/img/centro-mesa.webp', price: 'centros de mesa S/ 100 c/u',
+    text: 'Centros de mesa altos en bases doradas, arcos y detalles florales en los colores de la quinceañera. Coordinamos con el salón para tener todo listo antes de que lleguen los invitados.',
+    items: ['Centros de mesa altos o bajos', 'Arco o backdrop floral para fotos', 'Detalles para la mesa principal y la torta', 'Paleta de colores personalizada'],
+    msg: 'Hola 👋, quisiera cotizar la decoración floral de un quinceañero. Fecha: ___ · Lugar: ___ · N.º de mesas: ___',
+  },
+  {
+    id: 'inauguraciones', eyebrow: 'Inauguraciones', title: 'Un gran', accent: 'comienzo.', img: '/img/inauguracion.webp', price: 'desde S/ 100',
+    text: 'Arreglos de pie con girasoles, lirios y flores tropicales, con cinta impresa o tarjeta a nombre de tu empresa. Perfectos para aperturas, aniversarios corporativos y homenajes.',
+    items: ['Arreglo sobre pedestal, listo para exhibir', 'Cinta impresa o tarjeta con dedicatoria', 'Entrega en el local el día del evento', 'Varios tamaños según presupuesto'],
+    msg: 'Hola 👋, quisiera un arreglo de inauguración. Fecha: ___ · Empresa: ___ · Dirección de entrega: ___',
+  },
+];
+---
+<Layout dark title="Decoración de eventos — Bodas, quinceañeros e inauguraciones | Flores & Eventos" description="Ambientación floral para bodas desde S/ 2000, centros de mesa para 15 años a S/ 100 c/u y arreglos de inauguración desde S/ 100. Cotiza por WhatsApp.">
+  <PageHero eyebrow="Eventos" title="Ambientamos" accent="tu gran día" text="Bodas, quinceañeros e inauguraciones con flores frescas y un diseño pensado para el espacio y el estilo de tu celebración." image="/img/boda.webp" alt="" />
+
+  <div class="bg-ivory text-ink">
+    <div class="container-x -mt-10 relative z-10 grid gap-3 sm:grid-cols-3" data-stagger="100">
+      {events.map((e) => (
+        <a href={`#${e.id}`} data-reveal="up" class="group flex items-center justify-between rounded-2xl bg-white px-5 py-4 shadow-soft ring-1 ring-forest/5 transition hover:-translate-y-0.5 hover:shadow-lift">
+          <span><span class="block font-display text-2xl font-semibold">{e.eyebrow}</span><span class="text-xs uppercase tracking-[0.18em] text-fuchsia">{e.price}</span></span>
+          <Icons name="chevron" class="h-5 w-5 text-muted transition group-hover:translate-y-0.5 group-hover:text-forest" />
+        </a>
+      ))}
+    </div>
+
+    {events.map((e, i) => (
+      <section id={e.id} class="scroll-mt-28 py-20 sm:py-28">
+        <div class:list={['container-x grid items-center gap-12 lg:grid-cols-2 lg:gap-20', i % 2 === 1 && 'lg:[&>*:first-child]:order-2']}>
+          <div class="relative" data-reveal={i % 2 === 1 ? 'right' : 'left'}>
+            <div class="overflow-hidden rounded-[2rem] shadow-lift">
+              <img src={e.img} alt={e.eyebrow} width="640" height="800" loading="lazy" class="aspect-[4/5] w-full object-cover transition duration-[1.6s] hover:scale-105 [transition-timing-function:var(--ease-out-expo)]" />
+            </div>
+            <span class="animate-float absolute -bottom-5 left-6 rounded-full bg-forest px-5 py-2.5 font-display text-lg italic text-ivory shadow-lift" style="--r:-3deg">{e.price}</span>
+          </div>
+          <div data-reveal={i % 2 === 1 ? 'left' : 'right'}>
+            <p class="eyebrow">{e.eyebrow}</p>
+            <h2 class="h-display mt-4 text-4xl sm:text-6xl">{e.title} <em class="font-light italic text-fuchsia">{e.accent}</em></h2>
+            <p class="mt-6 text-lg leading-relaxed text-ink/75">{e.text}</p>
+            <ul class="mt-6 grid gap-2.5" data-stagger="80">
+              {e.items.map((it) => <li data-reveal="up" class="flex items-start gap-3"><span class="mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-leaf/20 text-[#4f7d1c]"><Icons name="check" class="h-3 w-3" /></span> {it}</li>)}
+            </ul>
+            <a href={wa(e.msg)} target="_blank" rel="noopener" class="btn btn-primary mt-8"><Icons name="wa" class="h-4 w-4" /> Cotizar {e.eyebrow.toLowerCase()}</a>
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <Marquee items={['Bodas', 'Quinceañeros', 'Inauguraciones', 'Aniversarios', 'Baby showers', 'Cenas de gala', 'Eventos corporativos']} />
+
+    <section class="py-20 sm:py-28">
+      <div class="container-x">
+        <div class="mx-auto max-w-2xl text-center" data-reveal="up">
+          <p class="eyebrow justify-center before:hidden">Proceso</p>
+          <h2 class="h-display mt-4 text-4xl sm:text-6xl">De la idea <em class="font-light italic text-fuchsia">al montaje</em></h2>
+        </div>
+        <ol class="relative mt-14 grid gap-8 md:grid-cols-4" data-stagger="130">
+          <span aria-hidden="true" class="absolute left-0 right-0 top-7 hidden h-px bg-forest/10 md:block"></span>
+          {[
+            { n: '01', t: 'Brief', d: 'Tipo de evento, fecha, lugar, número de mesas y colores.' },
+            { n: '02', t: 'Propuesta', d: 'Referencias visuales, flores sugeridas y cotización.' },
+            { n: '03', t: 'Confirmación', d: 'Ajustamos detalles y reservamos la fecha.' },
+            { n: '04', t: 'Montaje', d: 'Instalamos los arreglos frescos en el local, a tiempo.' },
+          ].map((s) => (
+            <li data-reveal="up" class="relative">
+              <span class="grid h-14 w-14 place-items-center rounded-full bg-forest font-display text-xl text-ivory shadow-soft">{s.n}</span>
+              <h3 class="mt-4 font-display text-2xl font-semibold">{s.t}</h3>
+              <p class="mt-1.5 text-sm text-muted">{s.d}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <CtaBand title="Reserva la fecha de tu evento" text="Cuéntanos tipo de evento, fecha y lugar; te enviamos una propuesta con referencias y presupuesto." msg="Hola 👋, quisiera cotizar la decoración floral de un evento. Tipo: ___ · Fecha: ___ · Lugar: ___" label="Cotizar mi evento" />
+  </div>
+</Layout>

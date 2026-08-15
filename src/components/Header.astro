@@ -1,61 +1,78 @@
 ---
 import { site, nav, wa } from '../data/site';
 import Icons from './Icons.astro';
+interface Props { dark?: boolean }
+const { dark = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
-<header id="header" class="group/h fixed inset-x-0 top-0 z-50" data-scrolled="false">
+<header id="header" data-dark={dark ? 'true' : 'false'} data-scrolled="false"
+  class="group/h fixed inset-x-0 top-0 z-50 transition-colors duration-500 data-[scrolled=true]:bg-ivory/85 data-[scrolled=true]:shadow-soft data-[scrolled=true]:backdrop-blur-md">
   <div class="container-x">
-    <div class="mt-3 flex items-center justify-between rounded-2xl border border-transparent px-3 py-2 transition-all duration-300 group-data-[scrolled=true]/h:border-choco/10 group-data-[scrolled=true]/h:bg-cream/85 group-data-[scrolled=true]/h:shadow-soft group-data-[scrolled=true]/h:backdrop-blur-md">
-      <a href="#top" class="flex items-center gap-3" aria-label={`${site.name} — inicio`}>
-        <img src="/img/logo.webp" alt="" width="44" height="44" class="h-11 w-11 rounded-full ring-1 ring-choco/10" />
-        <span class="leading-tight">
-          <span class="block font-display text-lg font-semibold tracking-tight">Flores <span class="text-terra">&amp; Eventos</span></span>
-          <span class="block text-[11px] uppercase tracking-[0.2em] text-mocha">Florería · Decoración</span>
+    <div class="flex items-center justify-between py-3.5">
+      <a href="/" class="flex items-center gap-3" aria-label={`${site.name} — inicio`}>
+        <img src="/img/logo.webp" alt="" width="42" height="42" class="h-[42px] w-[42px] rounded-full ring-1 ring-black/10" transition:name="logo" />
+        <span class="leading-none">
+          <span class:list={['block font-display text-[1.45rem] font-semibold tracking-tight transition-colors', dark ? 'text-ivory group-data-[scrolled=true]/h:text-forest' : 'text-forest']}>Flores <em class="font-light italic text-fuchsia">&amp;</em> Eventos</span>
+          <span class:list={['mt-1 block text-[10px] uppercase tracking-[0.3em] transition-colors', dark ? 'text-ivory/60 group-data-[scrolled=true]/h:text-muted' : 'text-muted']}>Florería · Decoración</span>
         </span>
       </a>
 
-      <nav class="hidden items-center gap-1 lg:flex" aria-label="Principal">
+      <nav class="hidden items-center gap-7 lg:flex" aria-label="Principal">
         {nav.map((n) => (
-          <a href={n.href} class="rounded-full px-4 py-2 text-sm font-medium text-cocoa transition hover:bg-choco/5 hover:text-choco">{n.label}</a>
+          <a href={n.href} aria-current={isActive(n.href) ? 'page' : undefined}
+             class:list={['link-underline text-[13px] font-medium uppercase tracking-[0.18em] transition-colors', dark ? 'text-ivory/85 hover:text-ivory group-data-[scrolled=true]/h:text-forest' : 'text-forest/80 hover:text-forest']}>
+            {n.label}
+          </a>
         ))}
       </nav>
 
       <div class="flex items-center gap-2">
-        <a href={wa()} target="_blank" rel="noopener" class="btn-wa hidden !py-2.5 sm:inline-flex">
-          <Icons name="wa" class="h-4 w-4" /> Cotizar por WhatsApp
-        </a>
-        <button id="menu-btn" class="rounded-full p-2.5 text-choco hover:bg-choco/5 lg:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+        <a href={wa()} target="_blank" rel="noopener" class="btn btn-wa hidden !py-2.5 sm:inline-flex"><Icons name="wa" class="h-4 w-4" /> WhatsApp</a>
+        <button id="menu-btn" class:list={['rounded-full p-2.5 transition lg:hidden', dark ? 'text-ivory group-data-[scrolled=true]/h:text-forest' : 'text-forest hover:bg-forest/5']} aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
           <Icons name="menu" class="h-6 w-6" />
         </button>
       </div>
     </div>
   </div>
 
-  <div id="mobile-menu" class="container-x hidden lg:hidden">
-    <div class="mt-2 rounded-2xl border border-choco/10 bg-cream/95 p-3 shadow-lift backdrop-blur-md">
-      <nav class="flex flex-col" aria-label="Móvil">
-        {nav.map((n) => (
-          <a href={n.href} class="rounded-xl px-4 py-3 text-base font-medium text-cocoa hover:bg-choco/5 hover:text-choco">{n.label}</a>
+  <div id="mobile-menu" class="pointer-events-none fixed inset-0 z-40 lg:hidden" aria-hidden="true">
+    <div class="menu-backdrop absolute inset-0 bg-forest/40 opacity-0 backdrop-blur-sm transition-opacity duration-500"></div>
+    <div class="menu-panel absolute inset-y-0 right-0 flex w-[86%] max-w-sm translate-x-full flex-col bg-forest px-7 pb-8 pt-24 text-ivory shadow-lift transition-transform duration-600 [transition-timing-function:var(--ease-out-expo)]">
+      <button id="menu-close" class="absolute right-5 top-5 rounded-full p-2 text-ivory/80 hover:bg-ivory/10" aria-label="Cerrar menú"><Icons name="x" class="h-6 w-6" /></button>
+      <nav class="flex flex-col gap-1" aria-label="Móvil">
+        {nav.map((n, i) => (
+          <a href={n.href} aria-current={isActive(n.href) ? 'page' : undefined} style={`--i:${i}`}
+             class="menu-item flex items-center justify-between border-b border-ivory/10 py-4 font-display text-3xl font-medium text-ivory/90 transition hover:text-blush aria-[current=page]:text-blush">
+            {n.label} <Icons name="arrow-up-right" class="h-5 w-5 opacity-60" />
+          </a>
         ))}
       </nav>
-      <a href={wa()} target="_blank" rel="noopener" class="btn-wa mt-2 w-full"><Icons name="wa" class="h-4 w-4" /> Cotizar por WhatsApp</a>
+      <a href={wa()} target="_blank" rel="noopener" class="btn btn-wa mt-auto w-full"><Icons name="wa" class="h-4 w-4" /> Cotizar por WhatsApp</a>
     </div>
   </div>
 </header>
 
-<script>
-  const header = document.getElementById('header')!;
-  const onScroll = () => { header.dataset.scrolled = String(window.scrollY > 24); };
-  onScroll();
-  addEventListener('scroll', onScroll, { passive: true });
+<style>
+  .menu-item { opacity: 0; transform: translateX(24px); transition: opacity .6s var(--ease-out-expo), transform .6s var(--ease-out-expo), color .3s; transition-delay: calc(var(--i) * 60ms + 150ms); }
+  #mobile-menu.open { pointer-events: auto; }
+  #mobile-menu.open .menu-backdrop { opacity: 1; }
+  #mobile-menu.open .menu-panel { transform: none; }
+  #mobile-menu.open .menu-item { opacity: 1; transform: none; }
+</style>
 
-  const btn = document.getElementById('menu-btn')!;
-  const menu = document.getElementById('mobile-menu')!;
-  const toggle = (open?: boolean) => {
-    const o = open ?? menu.classList.contains('hidden');
-    menu.classList.toggle('hidden', !o);
-    btn.setAttribute('aria-expanded', String(o));
-    btn.setAttribute('aria-label', o ? 'Cerrar menú' : 'Abrir menú');
-  };
-  btn.addEventListener('click', () => toggle());
-  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => toggle(false)));
+<script>
+  function initHeader() {
+    const header = document.getElementById('header'); if (!header) return;
+    const onScroll = () => { header.dataset.scrolled = String(window.scrollY > 40); };
+    onScroll();
+    if (!(window as any).__headerScroll) { (window as any).__headerScroll = true; addEventListener('scroll', () => document.getElementById('header')?.setAttribute('data-scrolled', String(window.scrollY > 40)), { passive: true }); }
+
+    const btn = document.getElementById('menu-btn')!; const menu = document.getElementById('mobile-menu')!; const close = document.getElementById('menu-close')!;
+    const set = (open: boolean) => { menu.classList.toggle('open', open); menu.setAttribute('aria-hidden', String(!open)); btn.setAttribute('aria-expanded', String(open)); document.body.style.overflow = open ? 'hidden' : ''; };
+    btn.addEventListener('click', () => set(true)); close.addEventListener('click', () => set(false));
+    menu.querySelector('.menu-backdrop')!.addEventListener('click', () => set(false));
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false)));
+  }
+  document.addEventListener('astro:page-load', initHeader);
 </script>

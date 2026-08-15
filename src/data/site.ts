@@ -1,7 +1,6 @@
 // ⚠️ El nombre comercial no fue indicado por la clienta; "Flores & Eventos" es provisional.
 export const site = {
   name: 'Flores & Eventos',
-  short: 'Flores & Eventos',
   tagline: 'Arreglos florales y decoración de eventos',
   claim: 'Flores para cada momento',
   description:
@@ -16,9 +15,9 @@ export function wa(text = 'Hola 👋, quisiera información sobre sus arreglos f
 }
 
 export const nav = [
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#catalogo', label: 'Catálogo' },
-  { href: '#eventos', label: 'Eventos' },
-  { href: '#porque', label: 'Por qué elegirnos' },
-  { href: '#contacto', label: 'Contacto' },
+  { href: '/', label: 'Inicio' },
+  { href: '/catalogo', label: 'Catálogo' },
+  { href: '/eventos', label: 'Eventos' },
+  { href: '/nosotros', label: 'Nosotros' },
+  { href: '/contacto', label: 'Contacto' },
 ];

@@ -1,13 +1,14 @@
 ---
-const items = ['Ramos de rosas', 'Arreglos box', 'Bodas', 'Quinceañeros', 'Inauguraciones', 'Centros de mesa', 'Cumpleaños', 'Flores para cada momento'];
+interface Props { items?: string[]; dark?: boolean }
+const { items = ['Ramos de rosas', 'Arreglos box', 'Bodas', 'Quinceañeros', 'Inauguraciones', 'Centros de mesa', 'Cumpleaños', 'Flores para cada momento'], dark = false } = Astro.props;
 const row = [...items, ...items];
 ---
-<div class="mt-14 border-y border-choco/10 bg-cream-2/60 py-4" aria-hidden="true">
-  <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-    <div class="flex shrink-0 animate-marquee items-center gap-8 pr-8">
+<div class:list={['border-y py-5', dark ? 'border-ivory/10 bg-forest text-ivory/80' : 'border-forest/10 bg-ivory-2/70 text-forest/80']} aria-hidden="true">
+  <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+    <div class="flex shrink-0 animate-marquee items-center gap-10 pr-10">
       {row.map((t) => (
-        <span class="flex items-center gap-8 whitespace-nowrap font-display text-lg italic text-cocoa">
-          {t} <span class="h-1.5 w-1.5 rounded-full bg-terra"></span>
+        <span class="flex items-center gap-10 whitespace-nowrap font-display text-2xl italic">
+          {t} <span class="h-1.5 w-1.5 rounded-full bg-fuchsia"></span>
         </span>
       ))}
     </div>
