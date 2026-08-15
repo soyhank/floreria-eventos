@@ -28,8 +28,8 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
-  body { @apply bg-ivory text-ink font-sans antialiased; }
+  html { scroll-behavior: smooth; scroll-padding-top: 6rem; overflow-x: clip; }
+  body { @apply bg-ivory text-ink font-sans antialiased; overflow-x: clip; }
   ::selection { background: var(--color-blush); color: var(--color-forest); }
   h1, h2, h3, .font-display { font-family: var(--font-display); }
   img { user-select: none; }
